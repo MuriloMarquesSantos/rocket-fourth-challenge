@@ -13,16 +13,14 @@ import {
 
 export default function App() {
   const [repositories, setRepositories] = useState([]);
-  const [loaded, setLoaded] = useState(false);
 
   useEffect(() => {
     const getRepositories = async() => {
       const response = await api.get('repositories');
       setRepositories(response.data);
-      setLoaded(true);
     }
     getRepositories();
-  }, [repositories])
+  }, [])
 
   async function handleLikeRepository(id) {
     const repositoryIndex = repositories.findIndex(repository => id === repository.id);
@@ -36,10 +34,12 @@ export default function App() {
       likes: response.data.likes
     }
 
-    repositories[repositoryIndex] = repository;
-  }
+    let newRepositories = [...repositories];
 
-  if (!loaded) return false;
+    newRepositories[repositoryIndex] = repository;
+
+    setRepositories(newRepositories);
+  }
 
   return (
     <>
